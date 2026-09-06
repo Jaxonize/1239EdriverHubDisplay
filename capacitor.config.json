@@ -1,0 +1,6 @@
+{
+  "appId": "com.team1239e.tracker",
+  "appName": "VEX 1239E Tracker",
+  "webDir": "public",
+  "bundledWebRuntime": false
+}

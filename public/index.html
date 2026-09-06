@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>VEX 1239E Tracker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .glow-border { box-shadow: 0 0 15px 5px rgba(0, 150, 255, 0.7); }
+        .glow-border-red { box-shadow: 0 0 15px 5px rgba(255, 69, 0, 0.7); }
+        .highlight-team { font-weight: bold; color: #fff; }
+    </style>
+</head>
+<body class="bg-zinc-950 text-white min-h-screen flex flex-col p-4">
+    <div id="error-message" class="hidden bg-red-600/50 border border-red-500 rounded-lg p-4 text-center text-white my-4"></div>
+    <div id="loading" class="flex items-center justify-center py-10">
+        <span class="animate-spin rounded-full border-4 border-b-zinc-600 w-12 h-12"></span>
+    </div>
+    <div id="app" class="hidden flex-1 flex flex-col">
+        <header class="mb-4 text-center">
+            <h1 class="text-2xl font-bold">VEX Team 1239E Tracker</h1>
+            <p id="event-info" class="text-sm text-zinc-400"></p>
+        </header>
+        <main class="flex-1 flex flex-row gap-4">
+            <section id="hero-card" class="flex-1 flex flex-col gap-4 bg-zinc-800/50 rounded-xl p-4 backdrop-blur-sm">
+                <div class="text-center">
+                    <h2 id="remaining-matches" class="text-5xl font-bold text-emerald-400">-- Matches Remaining</h2>
+                    <p id="next-match-id" class="text-3xl font-semibold text-zinc-100">Match --</p>
+                </div>
+                <div class="flex gap-4">
+                    <div id="blue-alliance" class="flex-1 flex flex-col gap-2 bg-blue-600/30 rounded-lg p-3">
+                        <h3 class="text-lg font-semibold">Blue Alliance</h3>
+                        <div class="flex flex-col gap-1">
+                            <span id="blue-team1" class="text-xl font-bold">--</span>
+                            <span id="blue-team2" class="text-xl font-bold">--</span>
+                        </div>
+                    </div>
+                    <div id="red-alliance" class="flex-1 flex flex-col gap-2 bg-red-600/30 rounded-lg p-3">
+                        <h3 class="text-lg font-semibold">Red Alliance</h3>
+                        <div class="flex flex-col gap-1">
+                            <span id="red-team1" class="text-xl font-bold">--</span>
+                            <span id="red-team2" class="text-xl font-bold">--</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section id="queue-section" class="flex-1 flex flex-col gap-4">
+                <div id="tournament-context" class="bg-zinc-800/50 rounded-xl p-4 backdrop-blur-sm flex flex-col gap-3">
+                    <div class="flex flex-wrap gap-4 text-sm">
+                        <span>Event: <span id="event-name" class="font-semibold"></span></span>
+                        <span>Division: <span id="division-name" class="font-semibold"></span></span>
+                        <span>Last Scored: <span id="last-scored" class="font-semibold"></span></span>
+                        <span>Qualification Rank: <span id="qualification-rank" class="font-semibold">--</span></span>
+                        <span>Best Possible Rank: <span id="best-qualification-rank" class="font-semibold">--</span></span>
+                        <span>Worst Possible Rank: <span id="worst-qualification-rank" class="font-semibold">--</span></span>
+                        <span>Skills Rank: <span id="skills-rank" class="font-semibold">--</span></span>
+                    </div>
+                    <div id="last-refreshed" class="text-xs text-zinc-400"></div>
+                </div>
+                <div id="queue-container" class="flex-1">
+                    <h3 class="mb-2 text-lg font-semibold">Upcoming Matches for 1239E</h3>
+                    <div id="queue-list" class="space-y-2 overflow-y-auto"></div>
+                </div>
+            </section>
+        </main>
+        <footer class="mt-4">
+            <button id="refresh-btn" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded flex items-center justify-center gap-2">
+                Refresh
+            </button>
+        </footer>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

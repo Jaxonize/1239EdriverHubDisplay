@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">VEX 1239E Tracker</string>
+    <string name="title_activity_main">VEX 1239E Tracker</string>
+    <string name="package_name">com.team1239e.tracker</string>
+    <string name="custom_url_scheme">com.team1239e.tracker</string>
+</resources>
