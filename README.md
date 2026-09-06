@@ -56,6 +56,15 @@ Copy-Item public\config.example.js public\config.js
 
 Then edit `public/config.js` and replace the placeholder with your VEX Events API v2 bearer token. The file is intentionally ignored by Git.
 
+Every person who uses this project must supply their own API key:
+
+1. Obtain a VEX Events API v2 bearer token from the VEX developer/API access process.
+2. Copy `public/config.example.js` to `public/config.js`.
+3. Open `public/config.js` and replace `paste-your-vex-events-api-token-here` with your own token.
+4. Run `npx cap copy` before building the APK.
+
+Do not commit `public/config.js` or share its contents. The app will not be able to load live data until a valid token is added.
+
 The dashboard is a static web app in `public/`. For Android builds, use Capacitor to copy the web assets into the native project:
 
 ```bash
