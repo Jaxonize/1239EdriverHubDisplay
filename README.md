@@ -1,3 +1,5 @@
+yes this is shamelessly vibecoded icl
+
 # VEX 1239E Driver Hub Tracker
 
 A lightweight Capacitor Android dashboard for displaying live VEX Robotics competition information on a REV Robotics Driver Hub.
