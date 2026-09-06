@@ -9,6 +9,12 @@
         .glow-border { box-shadow: 0 0 15px 5px rgba(0, 150, 255, 0.7); }
         .glow-border-red { box-shadow: 0 0 15px 5px rgba(255, 69, 0, 0.7); }
         .highlight-team { font-weight: bold; color: #fff; }
+        html { scroll-behavior: smooth; }
+        body { overscroll-behavior: contain; }
+        .status-dot { width: .65rem; height: .65rem; border-radius: 9999px; display: inline-block; }
+        .status-online { background: #34d399; box-shadow: 0 0 10px #34d399; }
+        .status-offline { background: #f87171; box-shadow: 0 0 10px #f87171; }
+        .status-cached { background: #fbbf24; box-shadow: 0 0 10px #fbbf24; }
     </style>
 </head>
 <body class="bg-zinc-950 text-white min-h-screen flex flex-col p-4">
@@ -18,10 +24,11 @@
     </div>
     <div id="app" class="hidden flex-1 flex flex-col">
         <header class="mb-4 text-center">
-            <h1 class="text-2xl font-bold">VEX Team 1239E Tracker</h1>
+            <h1 id="app-title" class="text-2xl font-bold">VEX Team 1239E Tracker</h1>
             <p id="event-info" class="text-sm text-zinc-400"></p>
         </header>
-        <main class="flex-1 flex flex-row gap-4">
+        <main class="flex-1 flex flex-col gap-4">
+            <div class="flex flex-col lg:flex-row gap-4">
             <section id="hero-card" class="flex-1 flex flex-col gap-4 bg-zinc-800/50 rounded-xl p-4 backdrop-blur-sm">
                 <div class="text-center">
                     <h2 id="remaining-matches" class="text-5xl font-bold text-emerald-400">-- Matches Remaining</h2>
@@ -58,8 +65,49 @@
                     <div id="last-refreshed" class="text-xs text-zinc-400"></div>
                 </div>
                 <div id="queue-container" class="flex-1">
-                    <h3 class="mb-2 text-lg font-semibold">Upcoming Matches for 1239E</h3>
+                    <h3 id="queue-title" class="mb-2 text-lg font-semibold">Upcoming Matches for 1239E</h3>
                     <div id="queue-list" class="space-y-2 overflow-y-auto"></div>
+                </div>
+            </section>
+            </div>
+
+            <section id="secondary-tools" class="bg-zinc-900 rounded-xl p-4 space-y-4">
+                <div class="flex flex-wrap items-center justify-between gap-3">
+                    <h2 class="text-xl font-bold">Competition Tools</h2>
+                    <div id="connection-status" class="flex items-center gap-2 text-sm text-zinc-300">
+                        <span class="status-dot status-offline"></span><span>Waiting for data</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-zinc-800/70 rounded-lg p-4 space-y-3">
+                        <h3 class="font-semibold">Team and event controls</h3>
+                        <div class="flex gap-2">
+                            <input id="team-input" class="min-w-0 flex-1 bg-zinc-950 border border-zinc-700 rounded px-3 py-2" value="1239E" aria-label="Team number">
+                            <button id="team-save-btn" class="bg-blue-600 hover:bg-blue-700 rounded px-3 py-2 font-semibold">Use team</button>
+                        </div>
+                        <select id="event-select" class="w-full bg-zinc-950 border border-zinc-700 rounded px-3 py-2" aria-label="Event override">
+                            <option value="">Automatic event selection</option>
+                        </select>
+                        <p class="text-xs text-zinc-400">Use an event override for testing or when automatic selection is not the event you want.</p>
+                    </div>
+                    <div class="bg-zinc-800/70 rounded-lg p-4 space-y-3">
+                        <h3 class="font-semibold">Display status</h3>
+                        <div id="countdown" class="text-3xl font-bold text-emerald-400">Next match countdown: --</div>
+                        <p id="data-age" class="text-sm text-zinc-400">No successful update yet</p>
+                        <p id="wake-lock-status" class="text-sm text-zinc-400">Screen sleep prevention: starting…</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                    <div class="bg-zinc-800/70 rounded-lg p-4">
+                        <h3 class="font-semibold mb-3">Recent results and opponents</h3>
+                        <div id="recent-results" class="space-y-2 text-sm"></div>
+                    </div>
+                    <div class="bg-zinc-800/70 rounded-lg p-4">
+                        <h3 class="font-semibold mb-3">Qualification progress</h3>
+                        <div id="qualification-progress" class="space-y-2 text-sm"></div>
+                    </div>
                 </div>
             </section>
         </main>

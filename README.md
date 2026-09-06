@@ -110,13 +110,13 @@ The Android manifest is configured for internet access and landscape orientation
 
 ## Changing the tracked team
 
-The tracked team is configured near the top of `public/script.js`:
+The default tracked team is configured near the top of `public/script.js`:
 
 ```javascript
-const TEAM_NUMBER = '1239E';
+const DEFAULT_TEAM_NUMBER = '1239E';
 ```
 
-Change that value, copy the web assets, and rebuild the APK.
+For normal use, enter a team in the **Team and event controls** section and tap **Use team**. The selection is saved on the device. To change the built-in default, change `DEFAULT_TEAM_NUMBER`, then copy the web assets and rebuild the APK.
 
 ## VEX Events API
 
