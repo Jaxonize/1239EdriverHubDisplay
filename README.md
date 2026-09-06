@@ -136,6 +136,8 @@ The application reads event, team, division, match, ranking, and skills data fro
 
 API credentials should be kept out of public repositories. This project loads the token from the local-only `public/config.js` file. Note that a token bundled into a client APK can still be extracted from the installed app; for production use, proxy API requests through a trusted backend.
 
+The Android app disables automatic backup for its local data, applies a restrictive Content Security Policy, and escapes API/cached values before rendering them. These controls reduce local-data and DOM-injection risk, but they do not make a bearer token private inside a client APK.
+
 ## Troubleshooting
 
 ### `Failed to fetch`

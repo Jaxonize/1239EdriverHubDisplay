@@ -103,6 +103,15 @@ const API_BASE = 'https://events.vex.com/api/v2';
             return Array.isArray(response) ? response : (Array.isArray(response?.data) ? response.data : []);
         }
 
+        function escapeHtml(value) {
+            return String(value ?? '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
         async function fetchAllPages(path) {
             const cached = apiCache.get(path);
             if (cached && Date.now() - cached.timestamp < API_CACHE_TTL) {
@@ -309,14 +318,14 @@ function processMatches(matches, teamNum) {
                 const blue = m.alliances.blue.teams.map(t => t.team).join(' + ');
                 const red = m.alliances.red.teams.map(t => t.team).join(' + ');
                 const score = `${m.alliances.blue.score ?? '--'} - ${m.alliances.red.score ?? '--'}`;
-                return `<div class="rounded bg-zinc-950 p-2"><span class="font-semibold">${m.match_number}</span> <span class="text-zinc-400">${score}</span><br><span class="text-xs text-zinc-400">${blue} vs ${red}</span></div>`;
+                return `<div class="rounded bg-zinc-950 p-2"><span class="font-semibold">${escapeHtml(m.match_number)}</span> <span class="text-zinc-400">${escapeHtml(score)}</span><br><span class="text-xs text-zinc-400">${escapeHtml(blue)} vs ${escapeHtml(red)}</span></div>`;
             }).join('') : '<p class="text-zinc-500">No scored matches available.</p>';
             qualificationProgressEl.innerHTML = `
                 <div class="flex justify-between"><span>Matches completed</span><strong>${Math.max(0, state.matches.filter(isScored).length)}</strong></div>
                 <div class="flex justify-between"><span>Matches remaining</span><strong>${state.remainingMatchesCount}</strong></div>
                 <div class="flex justify-between"><span>Current rank</span><strong>${state.qualificationRank ? `#${state.qualificationRank}` : '--'}</strong></div>
                 <div class="flex justify-between"><span>Possible range</span><strong>${state.bestQualificationRank && state.worstQualificationRank ? `#${state.bestQualificationRank} – #${state.worstQualificationRank}` : '--'}</strong></div>
-                <div class="flex justify-between"><span>Recent opponents</span><strong>${state.opponents.length ? state.opponents.join(', ') : '--'}</strong></div>`;
+                <div class="flex justify-between"><span>Recent opponents</span><strong>${escapeHtml(state.opponents.length ? state.opponents.join(', ') : '--')}</strong></div>`;
         }
 
 function updateUI() {
@@ -383,17 +392,17 @@ function updateUI() {
                     div.className = 'bg-zinc-800/50 rounded-lg p-3 flex justify-between items-start';
                     div.innerHTML = `
                         <div>
-                            <span class="font-semibold">${m.match_number}</span>
-                            <span class="ml-2 text-xs text-zinc-400">${new Date(m.start).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+                            <span class="font-semibold">${escapeHtml(m.match_number)}</span>
+                            <span class="ml-2 text-xs text-zinc-400">${escapeHtml(new Date(m.start).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}))}</span>
                         </div>
                         <div class="flex gap-3 text-sm">
                             <div class="bg-blue-600/30 rounded px-2 py-1">
-                                <span>${m.alliances.blue.teams[0]?.team || ''}</span> 
-                                <span>${m.alliances.blue.teams[1]?.team || ''}</span>
+                                <span>${escapeHtml(m.alliances.blue.teams[0]?.team || '')}</span>
+                                <span>${escapeHtml(m.alliances.blue.teams[1]?.team || '')}</span>
                             </div>
                             <div class="bg-red-600/30 rounded px-2 py-1">
-                                <span>${m.alliances.red.teams[0]?.team || ''}</span> 
-                                <span>${m.alliances.red.teams[1]?.team || ''}</span>
+                                <span>${escapeHtml(m.alliances.red.teams[0]?.team || '')}</span>
+                                <span>${escapeHtml(m.alliances.red.teams[1]?.team || '')}</span>
                             </div>
                         </div>
                     `;
