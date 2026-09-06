@@ -26,6 +26,7 @@ The app is designed for a 5.5-inch landscape display and defaults to team **1239
 - Shows recent match results and opposing teams.
 - Shows qualification progress, including completed matches and possible rank range.
 - Requests a screen wake lock to help keep the display awake during competition.
+- Shows an embedded event livestream when the VEX event provides a YouTube or Vimeo webcast, with a safe external-link fallback for other providers.
 - Refreshes automatically every 30 seconds, with a manual refresh button.
 - Uses native Capacitor HTTP requests on Android to avoid browser CORS limitations.
 - Uses a dark, high-contrast interface optimized for Driver Hub use.

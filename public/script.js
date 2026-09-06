@@ -60,6 +60,10 @@ const API_BASE = 'https://events.vex.com/api/v2';
         const eventSelectEl = document.getElementById('event-select');
         const recentResultsEl = document.getElementById('recent-results');
         const qualificationProgressEl = document.getElementById('qualification-progress');
+        const livestreamSectionEl = document.getElementById('livestream-section');
+        const livestreamFrameEl = document.getElementById('livestream-frame');
+        const livestreamLinkEl = document.getElementById('livestream-link');
+        const livestreamNoteEl = document.getElementById('livestream-note');
         let wakeLock = null;
 
         async function fetchWithAuth(url) {
@@ -110,6 +114,59 @@ const API_BASE = 'https://events.vex.com/api/v2';
                 .replace(/>/g, '&gt;')
                 .replace(/"/g, '&quot;')
                 .replace(/'/g, '&#039;');
+        }
+
+        function findLivestreamUrl(event) {
+            const candidates = [event?.livestream, event?.livestream_url, event?.livestreamUrl, event?.webcast, event?.webcast_url, event?.webcastUrl, event?.live_stream];
+            for (const candidate of candidates) {
+                const value = typeof candidate === 'string' ? candidate : candidate?.url;
+                if (typeof value === 'string' && /^https:\/\//i.test(value)) return value;
+            }
+            const list = Array.isArray(event?.livestreams) ? event.livestreams : (Array.isArray(event?.webcasts) ? event.webcasts : []);
+            const listed = list.find(item => typeof item === 'string' || item?.url);
+            const value = typeof listed === 'string' ? listed : listed?.url;
+            return typeof value === 'string' && /^https:\/\//i.test(value) ? value : null;
+        }
+
+        function getLivestreamEmbedUrl(url) {
+            try {
+                const parsed = new URL(url);
+                const host = parsed.hostname.toLowerCase();
+                if (host === 'youtu.be' || host.endsWith('youtube.com')) {
+                    const id = parsed.searchParams.get('v') || parsed.pathname.match(/\/(?:live|embed)\/([^/?]+)/i)?.[1] || parsed.pathname.match(/\/([^/]+)$/)?.[1];
+                    return id ? `https://www.youtube-nocookie.com/embed/${encodeURIComponent(id)}` : null;
+                }
+                if (host === 'vimeo.com') {
+                    const eventId = parsed.pathname.match(/\/event\/(\d+)/i)?.[1];
+                    const videoId = parsed.pathname.match(/\/(\d+)/)?.[1];
+                    return eventId ? `https://player.vimeo.com/event/${eventId}/embed` : (videoId ? `https://player.vimeo.com/video/${videoId}` : null);
+                }
+            } catch (error) {
+                return null;
+            }
+            return null;
+        }
+
+        function updateLivestreamUI() {
+            const url = findLivestreamUrl(state.event);
+            if (!url) {
+                livestreamSectionEl.classList.add('hidden');
+                livestreamFrameEl.removeAttribute('src');
+                livestreamLinkEl.removeAttribute('href');
+                return;
+            }
+            livestreamSectionEl.classList.remove('hidden');
+            livestreamLinkEl.href = url;
+            const embedUrl = getLivestreamEmbedUrl(url);
+            if (embedUrl) {
+                livestreamFrameEl.src = embedUrl;
+                livestreamFrameEl.classList.remove('hidden');
+                livestreamNoteEl.textContent = 'The stream may have a delay. Use the event schedule as the source of truth for match timing.';
+            } else {
+                livestreamFrameEl.removeAttribute('src');
+                livestreamFrameEl.classList.add('hidden');
+                livestreamNoteEl.textContent = 'This event provides a stream link, but its provider does not support a safe embedded viewer. Use Open stream.';
+            }
         }
 
         async function fetchAllPages(path) {
@@ -410,6 +467,7 @@ function updateUI() {
                 });
             }
             updateSecondaryUI();
+            updateLivestreamUI();
         }
 
         function updateRefreshAge() {
@@ -592,7 +650,8 @@ async function updateData() {
             const key = `divisions:${eventId}`;
             const cached = apiCache.get(key);
             if (cached && Date.now() - cached.timestamp < API_CACHE_TTL) return cached.items;
-            const event = await fetchWithAuth(`${API_BASE}/events/${eventId}`);
+            const event = await fetchWithAuth(`${API_BASE}/events/${encodeURIComponent(eventId)}`);
+            state.event = { ...(state.event || {}), ...(event || {}) };
             const items = Array.isArray(event?.divisions) ? event.divisions : [];
             apiCache.set(key, { items, timestamp: Date.now() });
             return items;
@@ -602,7 +661,7 @@ async function updateData() {
             const key = `matches:${eventId}:${divisionId}`;
             const cached = apiCache.get(key);
             if (cached && Date.now() - cached.timestamp < 45 * 1000) return cached.items;
-            const response = await fetchWithAuth(`${API_BASE}/events/${eventId}/divisions/${divisionId}/matches?per_page=250`);
+            const response = await fetchWithAuth(`${API_BASE}/events/${encodeURIComponent(eventId)}/divisions/${encodeURIComponent(divisionId)}/matches?per_page=250`);
             const items = responseItems(response).map(normalizeMatch);
             apiCache.set(key, { items, timestamp: Date.now() });
             return items;
