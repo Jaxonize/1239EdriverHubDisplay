@@ -1,6 +1,6 @@
 const API_BASE = 'https://events.vex.com/api/v2';
         const TEAM_NUMBER = '1239E';
-REDACTED-VEX-TOKEN'REDACTED-VEX-TOKEN';
+REDACTED-VEX-TOKENwindow.APP_CONFIG?.VEX_API_TOKEN || '';
 
         let state = {
             teamId: null,

@@ -48,6 +48,14 @@ Install the project dependencies:
 npm install
 ```
 
+Create the local API configuration file before launching or building:
+
+```powershell
+Copy-Item public\config.example.js public\config.js
+```
+
+Then edit `public/config.js` and replace the placeholder with your VEX Events API v2 bearer token. The file is intentionally ignored by Git.
+
 The dashboard is a static web app in `public/`. For Android builds, use Capacitor to copy the web assets into the native project:
 
 ```bash
@@ -105,7 +113,7 @@ Change that value, copy the web assets, and rebuild the APK.
 
 The application reads event, team, division, match, ranking, and skills data from the [VEX Events API v2](https://www.robotevents.com/api/v2).
 
-API credentials should be kept out of public repositories. For a production deployment, use a small trusted backend or another secure credential-injection strategy instead of committing a bearer token in client-side JavaScript.
+API credentials should be kept out of public repositories. This project loads the token from the local-only `public/config.js` file. Note that a token bundled into a client APK can still be extracted from the installed app; for production use, proxy API requests through a trusted backend.
 
 ## Troubleshooting
 

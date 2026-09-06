@@ -1,5 +1,6 @@
 node_modules/
 work/
+public/config.js
 
 # Local Android/Gradle state and build outputs
 android/.gradle/
