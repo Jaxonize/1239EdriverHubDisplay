@@ -4,7 +4,7 @@ yes this is shamelessly vibecoded icl
 
 A lightweight Capacitor Android dashboard for displaying live VEX Robotics competition information on a REV Robotics Driver Hub.
 
-The app is designed for a 5.5-inch landscape display and currently tracks team **1239E** through the VEX Events API v2.
+The app is designed for a 5.5-inch landscape display and defaults to team **1239E** through the VEX Events API v2. The existing match dashboard is intentionally kept at the top of the screen; additional controls and context are below it for scrolling when needed.
 
 ## Features
 
@@ -18,6 +18,14 @@ The app is designed for a 5.5-inch landscape display and currently tracks team *
 - Displays tournament and division context.
 - Shows current qualification rank and skills rank.
 - Estimates the best- and worst-case qualification rank based on remaining matches.
+- Shows a live countdown to the next scheduled match.
+- Shows online, offline, and cached-data status.
+- Keeps the last successful data available when the Driver Hub temporarily loses network access.
+- Allows the team number to be changed from the app and saved on the device.
+- Allows automatic or manual event selection for testing and unusual event schedules.
+- Shows recent match results and opposing teams.
+- Shows qualification progress, including completed matches and possible rank range.
+- Requests a screen wake lock to help keep the display awake during competition.
 - Refreshes automatically every 30 seconds, with a manual refresh button.
 - Uses native Capacitor HTTP requests on Android to avoid browser CORS limitations.
 - Uses a dark, high-contrast interface optimized for Driver Hub use.
@@ -27,7 +35,9 @@ The app is designed for a 5.5-inch landscape display and currently tracks team *
 ```text
 public/
 ├── index.html       # Dashboard UI
-└── script.js        # API integration, match processing, and UI updates
+├── script.js        # API integration, match processing, and UI updates
+├── config.example.js # Safe API configuration template
+└── config.js        # Local-only API configuration; never commit this file
 
 android/             # Capacitor Android platform project
 capacitor.config.json
@@ -142,4 +152,4 @@ Tap **Refresh** and confirm the Driver Hub is online. The app also refreshes aut
 
 ## License
 
-This project is provided for use by VEX Robotics teams. Add a project-specific license before redistributing it publicly.
+This project is licensed under the [MIT License](LICENSE).
